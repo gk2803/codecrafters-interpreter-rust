@@ -103,7 +103,7 @@ pub struct Token {
 
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-	let lexeme = self.lexeme.as_deref().unwrap_or("Null");
+	let lexeme = self.lexeme.as_deref().unwrap_or("null");
 	write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
     }
 }
