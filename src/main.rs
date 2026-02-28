@@ -67,26 +67,26 @@ enum TokenType {
 impl Display for TokenType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
 	match self {
-	    TokenType::EOF => write!(f, "EOF null"),
-	    TokenType::LeftParen => write!(f, "LEFT_PAREN ( null"),
-	    TokenType::RightParen => write!(f, "RIGHT_PAREN ) null"),
-	    TokenType::LeftBrace => write!(f, "LEFT_BRACE {{ null"),
-	    TokenType::RightBrace => write!(f, "RIGHT_BRACE }} null"),
-	    TokenType::Comma => write!(f, "COMMA , null"),
-	    TokenType::Dot => write!(f, "DOT . null"),
-	    TokenType::Star => write!(f, "STAR * null"),
-	    TokenType::Plus => write!(f, "PLUS + null"),
-	    TokenType::Minus => write!(f, "MINUS - null"),
-	    TokenType::Semicolon => write!(f, "SEMICOLON ; null"),
-	    TokenType::Slash => write!(f, "SLASH / null"),
-	    TokenType::Bang => write!(f, "BANG ! null"),
-	    TokenType::BangEqual => write!(f, "BANG_EQUAL != null"),
-	    TokenType::Greater => write!(f, "GREATER > null"),
-	    TokenType::GreaterEqual => write!(f, "GREATER_EQUAL >= null"),
-	    TokenType::Less => write!(f, "LESS < null"),
-	    TokenType::LessEqual => write!(f, "LESS_EQUAL <= null"),
-	    TokenType::Equal => write!(f, "EQUAL = null"),
-	    TokenType::EqualEqual => write!(f, "EQUAL_EQUAL == null"),
+	    TokenType::EOF => write!(f, "EOF"),
+	    TokenType::LeftParen => write!(f, "LEFT_PAREN"),
+	    TokenType::RightParen => write!(f, "RIGHT_PAREN"),
+	    TokenType::LeftBrace => write!(f, "LEFT_BRACE"),
+	    TokenType::RightBrace => write!(f, "RIGHT_BRACE"),
+	    TokenType::Comma => write!(f, "COMMA"),
+	    TokenType::Dot => write!(f, "DOT"),
+	    TokenType::Star => write!(f, "STAR"),
+	    TokenType::Plus => write!(f, "PLUS"),
+	    TokenType::Minus => write!(f, "MINUS"),
+	    TokenType::Semicolon => write!(f, "SEMICOLON"),
+	    TokenType::Slash => write!(f, "SLASH"),
+	    TokenType::Bang => write!(f, "BANG"),
+	    TokenType::BangEqual => write!(f, "BANG_EQUAL"),
+	    TokenType::Greater => write!(f, "GREATER"),
+	    TokenType::GreaterEqual => write!(f, "GREATER_EQUAL"),
+	    TokenType::Less => write!(f, "LESS"),
+	    TokenType::LessEqual => write!(f, "LESS_EQUAL"),
+	    TokenType::Equal => write!(f, "EQUAL"),
+	    TokenType::EqualEqual => write!(f, "EQUAL_EQUAL"),
 	    TokenType::String(val) => write!(f, "STRING \"{}\" {}", val, val),
 	    TokenType::Number(raw, val) => write!(f, "NUMBER {} {}", raw, val),
 	}
@@ -103,9 +103,12 @@ pub struct Token {
 
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-	write!(f, "{} {} {:?}", self.tokenType, self.literal, self.lexeme)
+	let lexeme = self.lexeme.as_deref().unwrap_or("Null");
+	write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
     }
 }
+
+
 
 pub struct Lexer {
     tokens: Vec<Token>
