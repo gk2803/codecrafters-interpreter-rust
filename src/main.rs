@@ -22,15 +22,42 @@ fn main() {
                 String::new()
             });
 
-            // TODO: Uncomment the code below to pass the first stage
-            // if !file_contents.is_empty() {
-            //     panic!("Scanner not implemented");
-            // } else {
-            //     println!("EOF  null"); // Placeholder, replace this line when implementing the scanner
-            // }
+
+            if !file_contents.is_empty() {
+                panic!("Scanner not implemented");
+            } else {
+                println!("EOF  null"); // Placeholder, replace this line when implementing the scanner
+            }
         }
         _ => {
             eprintln!("Unknown command: {}", command);
         }
     }
+}
+enum TokenType {
+  // Single-character tokens.
+  LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
+  COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
+
+  // One or two character tokens.
+  BANG, BANG_EQUAL,
+  EQUAL, EQUAL_EQUAL,
+  GREATER, GREATER_EQUAL,
+  LESS, LESS_EQUAL,
+
+  // Literals.
+  IDENTIFIER, STRING, NUMBER,
+
+  // Keywords.
+  AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
+  PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
+
+  EOF
+}
+
+pub struct Token {
+    tokenType: TokenType,
+    lexeme: String,
+    line: i32,
+    literal: String
 }
