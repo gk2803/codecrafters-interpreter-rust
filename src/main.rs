@@ -25,17 +25,13 @@ fn main() {
                 String::new()
             });
 
-	    let mut lexer = Lexer::new();
+	    let mut lexer = Lexer::new(&file_contents);
+	    lexer.tokenize();
+	    
 
 
             if !file_contents.is_empty() {
-                for ch in file_contents.chars() {
-		    lexer.tokenize(ch);
-		}
-
-		for token in lexer.tokens {
-		    println!("{}", token);
-		}
+		lexer.tokenize();
 		
             }
         }
@@ -96,7 +92,7 @@ impl Display for TokenType {
 pub struct Token {
     tokenType: TokenType,
     lexeme: Option<String>,
-    literal: String
+    literal: String,
 }
 
 
@@ -110,35 +106,69 @@ impl Display for Token {
 
 
 
-pub struct Lexer {
-    tokens: Vec<Token>
+pub struct Lexer<'a> {
+    source: &'a String,
+    tokens: Vec<Token>,
+    start: usize,
+    current: usize,
+    line: usize
 }
 
 
-impl Lexer {
-    pub fn new() -> Self {
-	Self { tokens: Vec::new() }
+impl<'a> Lexer<'a> {
+    pub fn new(source: &'a String) -> Self {
+	Self {
+	    source,
+	    tokens: Vec::new(),
+	    start: 0,
+	    current: 0,
+	    line: 1
+	}
     }
 
-    pub fn tokenize(&mut self, ch: char) {
+    fn is_at_end(&self) -> bool {
+	self.current >= self.source.len()
+    }
 
-	match ch {
-	    '(' => self.tokens.push(
-		Token {
-		    tokenType: TokenType::LeftParen,
-		    lexeme: None,
-		    literal: "(".to_string()
-		}
-	    ),
-	    ')' => self.tokens.push(
-		Token {
-		    tokenType: TokenType::RightParen,
-		    lexeme: None,
-		    literal: ")".to_string()
-		}
-	    ),
-	    _ => {}
+    fn advance(&mut self) -> Option<char> {
+	let current_char = self.source.chars().next();
+	self.current += 1;
+	if let Some('\n') = current_char {
+	    self.line += 1;
+	}
+	current_char
+    }
+
+    pub fn tokenize(&mut self) {
+
+	while !self.is_at_end() {
+
+	    match self.advance() {
+		Some('(') => self.tokens.push(
+		    Token {
+			tokenType: TokenType::LeftParen,
+			lexeme: None,
+			literal: "(".to_string()
+		    }
+		),
+		Some(')') => self.tokens.push(
+		    Token {
+			tokenType: TokenType::RightParen,
+			lexeme: None,
+			literal: ")".to_string()
+		    }
+		),
+		None => self.tokens.push(
+		    Token {
+			tokenType: TokenType::EOF,
+			lexeme: None,
+			literal: "EOF".to_string()
+		    }
+		),
+		_ => {}
 		
+	    }
 	}
     }
 }
+
