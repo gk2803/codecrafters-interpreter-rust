@@ -168,6 +168,7 @@ impl<'a> Lexer<'a> {
 		_ => {}
 		
 	    }
+	    println!("{}", self.tokens[self.current]);
 	}
     }
 }
