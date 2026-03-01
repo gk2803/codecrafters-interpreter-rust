@@ -139,13 +139,13 @@ impl<'a> Lexer<'a> {
     }
 
     fn advance(&mut self) -> Option<char> {
+	println!("current: {}, len: {}", self.current, self.source.len());
 	if self.is_at_end() {
 	    return None;
 	}
 
 	let c = self.source[self.current..].chars().next()?;
 	self.current += c.len_utf8();
-	println!("current: {}, len: {}", self.current, self.source.len());
 	if c == '\n' {
 	    self.line += 1;
 	}
