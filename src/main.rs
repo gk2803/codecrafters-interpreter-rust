@@ -105,7 +105,7 @@ impl Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
 	let lexeme = self.lexeme.as_deref().unwrap_or("null");
 	if self.literal.is_empty() {
-	    write!(f, "{} {}", self.tokenType, lexeme)
+	    write!(f, "{}  {}", self.tokenType, lexeme)
 	} else {
 	    write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
 	}
