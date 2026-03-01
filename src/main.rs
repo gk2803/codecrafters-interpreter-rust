@@ -131,18 +131,20 @@ impl<'a> Lexer<'a> {
     }
 
     fn advance(&mut self) -> Option<char> {
-	let current_char = self.source.chars().next();
-	self.current += 1;
-	if let Some('\n') = current_char {
+	if self.is_at_end() {
+	    return None;
+	}
+
+	let c = self.source[self.current..].chars().next()?;
+	self.current += c.len_utf8();
+	if c == '\n' {
 	    self.line += 1;
 	}
-	current_char
+	Some(c)
     }
 
     pub fn tokenize(&mut self) {
-
-	while !self.is_at_end() {
-
+	loop {
 	    match self.advance() {
 		Some('(') => self.tokens.push(
 		    Token {
@@ -158,15 +160,17 @@ impl<'a> Lexer<'a> {
 			literal: ")".to_string()
 		    }
 		),
-		None => self.tokens.push(
-		    Token {
-			tokenType: TokenType::EOF,
-			lexeme: None,
-			literal: "EOF".to_string()
-		    }
-		),
+		None => {
+		    self.tokens.push(
+			Token {
+			    tokenType: TokenType::EOF,
+			    lexeme: None,
+			    literal: "EOF".to_string()
+			}
+		    );
+		    break;
+		},
 		_ => {}
-		
 	    }
 	    println!("{}", self.tokens[self.current - 1]);
 	}
