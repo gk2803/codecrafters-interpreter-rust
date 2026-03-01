@@ -63,7 +63,7 @@ enum TokenType {
 impl Display for TokenType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
 	match self {
-	    TokenType::EOF => write!(f, "EOF"),
+	    TokenType::EOF => write!(f, ""),
 	    TokenType::LeftParen => write!(f, "LEFT_PAREN"),
 	    TokenType::RightParen => write!(f, "RIGHT_PAREN"),
 	    TokenType::LeftBrace => write!(f, "LEFT_BRACE"),
