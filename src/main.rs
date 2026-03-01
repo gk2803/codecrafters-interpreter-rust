@@ -145,6 +145,7 @@ impl<'a> Lexer<'a> {
 
 	let c = self.source[self.current..].chars().next()?;
 	self.current += c.len_utf8();
+	println!("current: {}, len: {}", self.current, self.source.len());
 	if c == '\n' {
 	    self.line += 1;
 	}
