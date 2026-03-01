@@ -163,7 +163,9 @@ impl<'a> Lexer<'a> {
     }
 
     pub fn tokenize(&mut self) {
+
 	let mut is_err = false;
+
 	loop {
 	    let tok = match self.advance() {
 		Some('(') => 
