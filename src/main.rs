@@ -164,7 +164,7 @@ impl<'a> Lexer<'a> {
 			Token {
 			    tokenType: TokenType::EOF,
 			    lexeme: None,
-			    literal: "EOF".to_string()
+			    literal: "".to_string()
 			}
 		,
 		_ => continue
