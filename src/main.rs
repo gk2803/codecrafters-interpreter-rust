@@ -163,6 +163,7 @@ impl<'a> Lexer<'a> {
     }
 
     pub fn tokenize(&mut self) {
+	let mut is_err = false;
 	loop {
 	    let tok = match self.advance() {
 		Some('(') => 
@@ -242,18 +243,20 @@ impl<'a> Lexer<'a> {
 
 
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
-	    let is_err = matches!(tok.tokenType, TokenType::Unknown(_,_));
+	    is_err = matches!(tok.tokenType, TokenType::Unknown(_,_));
 	    self.tokens.push(tok);
 	    if is_eof {
 		println!("{}", self.tokens.last().unwrap());
 		break;
 	    } else if is_err{
 		eprintln!("{}", self.tokens.last().unwrap());
-		println!("EOF  null");
-		std::process::exit(65)
 	    } else {
 		println!("{}", self.tokens.last().unwrap());
 	    }
+	}
+
+	if is_err {
+	    std::process::exit(65);
 	}
     }
 }
