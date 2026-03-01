@@ -182,6 +182,41 @@ impl<'a> Lexer<'a> {
 		    lexeme: None,
 		    literal: "{".to_string()
 		},
+		Some('+') => Token {
+		    tokenType: TokenType::Plus,
+		    lexeme: None,
+		    literal: "+".to_string()
+		},
+		Some('*') => Token {
+		    tokenType: TokenType::Star,
+		    lexeme: None,
+		    literal: "{".to_string()
+		},
+		Some('/') => Token {
+		    tokenType: TokenType::Slash,
+		    lexeme: None,
+		    literal: "".to_string()
+		},
+		Some(',') => Token {
+		    tokenType: TokenType::Comma,
+		    lexeme: None,
+		    literal: ",".to_string()
+		},
+		Some('.') => Token {
+		    tokenType: TokenType::Dot,
+		    lexeme: None,
+		    literal: ".".to_string()
+		},
+		Some(';') => Token {
+		    tokenType: TokenType::Semicolon,
+		    lexeme: None,
+		    literal: ";".to_string()
+		},
+		Some('-') => Token {
+		    tokenType: TokenType::Minus,
+		    lexeme: None,
+		    literal: "-".to_string()
+		},
 		None => 
 			Token {
 			    tokenType: TokenType::EOF,
