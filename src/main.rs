@@ -249,6 +249,7 @@ impl<'a> Lexer<'a> {
 		break;
 	    } else if is_err{
 		eprintln!("{}", self.tokens.last().unwrap());
+		println!("EOF  null");
 		std::process::exit(65)
 	    } else {
 		println!("{}", self.tokens.last().unwrap());
