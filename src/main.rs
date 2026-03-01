@@ -231,23 +231,24 @@ impl<'a> Lexer<'a> {
 			    literal: "".to_string()
 			}
 		,
-		Some(c) => {
+		Some(c) => 
 		    Token {
 			tokenType: TokenType::Unknown(self.line, c),
 			lexeme: None,
 			literal: "".to_string()
-		    };
-		    std::process::exit(65)
-		}
+		    }
 		,
 	    };
 
 
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
+	    let is_err = matches!(tok.tokenType, TokenType::Unknown(_,_));
 	    self.tokens.push(tok);
 	    println!("{}", self.tokens.last().unwrap());
 	    if is_eof {
 		break;
+	    } else if is_err{
+		std::process::exit(65)
 	    }
 	}
     }
