@@ -231,12 +231,14 @@ impl<'a> Lexer<'a> {
 			    literal: "".to_string()
 			}
 		,
-		Some(c) =>
+		Some(c) => {
 		    Token {
 			tokenType: TokenType::Unknown(self.line, c),
 			lexeme: None,
 			literal: "".to_string()
-		    }
+		    };
+		    std::process::exit(65)
+		}
 		,
 	    };
 
