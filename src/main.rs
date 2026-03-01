@@ -172,6 +172,16 @@ impl<'a> Lexer<'a> {
 			literal: ")".to_string()
 		    }
 		,
+		Some('}') => Token {
+		    tokenType: TokenType::RightBrace,
+		    lexeme: None,
+		    literal: "}".to_string()
+		} ,
+		Some('{') => Token {
+		    tokenType: TokenType::LeftBrace,
+		    lexeme: None,
+		    literal: "{".to_string()
+		},
 		None => 
 			Token {
 			    tokenType: TokenType::EOF,
