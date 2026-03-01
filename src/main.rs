@@ -245,19 +245,21 @@ impl<'a> Lexer<'a> {
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
 	    is_err = matches!(tok.tokenType, TokenType::Unknown(_,_));
 	    self.tokens.push(tok);
-	    if is_eof {
+
+	    if !is_err {
 		println!("{}", self.tokens.last().unwrap());
-		break;
-	    } else if is_err{
-		eprintln!("{}", self.tokens.last().unwrap());
 	    } else {
-		println!("{}", self.tokens.last().unwrap());
+		eprintln!("{}", self.tokens.last().unwrap());
 	    }
+
+	    if is_eof {break;}
+
 	}
 
 	if is_err {
 	    std::process::exit(65);
 	}
+
     }
 }
 
