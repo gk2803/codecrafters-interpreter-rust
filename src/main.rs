@@ -190,7 +190,7 @@ impl<'a> Lexer<'a> {
 		Some('*') => Token {
 		    tokenType: TokenType::Star,
 		    lexeme: None,
-		    literal: "{".to_string()
+		    literal: "*".to_string()
 		},
 		Some('/') => Token {
 		    tokenType: TokenType::Slash,
