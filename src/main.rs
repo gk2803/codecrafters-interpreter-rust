@@ -90,7 +90,7 @@ impl Display for TokenType {
 	    TokenType::EqualEqual => "EQUAL_EQUAL",
 	    TokenType::String(val) => &format!("STRING \"{}\" {}", val, val),
 	    TokenType::Number(raw, val) => &format!("NUMBER {} {}", raw, val),
-	    TokenType::Unknown(value, line) => &format!("[line {}] Error: Unexpected character: {}", line, value)
+	    TokenType::Unknown(line, value) => &format!("[line {}] Error: Unexpected character: {}", line, value)
 	};
 
 	write!(f, "{}", kind)
