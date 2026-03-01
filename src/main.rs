@@ -195,7 +195,7 @@ impl<'a> Lexer<'a> {
 		Some('/') => Token {
 		    tokenType: TokenType::Slash,
 		    lexeme: None,
-		    literal: "".to_string()
+		    literal: "/".to_string()
 		},
 		Some(',') => Token {
 		    tokenType: TokenType::Comma,
