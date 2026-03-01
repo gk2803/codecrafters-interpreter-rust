@@ -40,6 +40,7 @@ fn main() {
         }
     }
 }
+#[derive(Debug)]
 enum TokenType {
     // Single-character tokens.
     LeftParen, RightParen, LeftBrace, RightBrace,
@@ -93,7 +94,7 @@ impl Display for TokenType {
     }
 }
 
-#[derive(debug)]
+#[derive(Debug)]
 pub struct Token {
     tokenType: TokenType,
     lexeme: Option<String>,
