@@ -240,12 +240,13 @@ impl<'a> Lexer<'a> {
 			lexeme: None,
 			literal: "".to_string()
 		    }
-		,
+		   ,
 	    };
 
-
+	    
+	    is_err = matches!(tok.tokenType, TokenType::Unknown(_, _));
+	    println!("{}", is_err);
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
-	    is_err = matches!(tok.tokenType, TokenType::Unknown(_,_));
 	    self.tokens.push(tok);
 	    println!("{:?}", is_err);
 	    if !is_err {
