@@ -58,14 +58,14 @@ enum TokenType {
     String(String), Number(String, f64),
 
     // Keywords.
+    EOF,
 
-
-    EOF
+    // Unknown
+    Unknown(usize, char)
 }
 
 impl Display for TokenType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-
 	
 	let kind = match self {
 	    TokenType::EOF => "EOF",
@@ -90,6 +90,7 @@ impl Display for TokenType {
 	    TokenType::EqualEqual => "EQUAL_EQUAL",
 	    TokenType::String(val) => &format!("STRING \"{}\" {}", val, val),
 	    TokenType::Number(raw, val) => &format!("NUMBER {} {}", raw, val),
+	    TokenType::Unknown(value, line) => &format!("[line {}] Error: Unexpected character: {}", line, value)
 	};
 
 	write!(f, "{}", kind)
@@ -108,11 +109,17 @@ pub struct Token {
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
 	let lexeme = self.lexeme.as_deref().unwrap_or("null");
-	if self.literal.is_empty() {
-	    write!(f, "{}  {}", self.tokenType, lexeme)
-	} else {
-	    write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
+
+	match self.tokenType {
+	    TokenType::EOF => write!(f, "{}  {}", self.tokenType, lexeme),
+	    TokenType::Unknown(x, y) => write!(f, "{}", self.tokenType),
+	    _ => write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
 	}
+	// if self.literal.is_empty() {
+	//     write!(f, "{}  {}", self.tokenType, lexeme)
+	// } else {
+	//     write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
+	// }
     }
 }
 
@@ -224,7 +231,13 @@ impl<'a> Lexer<'a> {
 			    literal: "".to_string()
 			}
 		,
-		_ => continue
+		Some(c) =>
+		    Token {
+			tokenType: TokenType::Unknown(self.line, c),
+			lexeme: None,
+			literal: "".to_string()
+		    }
+		,
 	    };
 
 
