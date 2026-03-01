@@ -145,34 +145,37 @@ impl<'a> Lexer<'a> {
 
     pub fn tokenize(&mut self) {
 	loop {
-	    match self.advance() {
-		Some('(') => self.tokens.push(
+	    let tok = match self.advance() {
+		Some('(') => 
 		    Token {
 			tokenType: TokenType::LeftParen,
 			lexeme: None,
 			literal: "(".to_string()
 		    }
-		),
-		Some(')') => self.tokens.push(
+		,
+		Some(')') => 
 		    Token {
 			tokenType: TokenType::RightParen,
 			lexeme: None,
 			literal: ")".to_string()
 		    }
-		),
-		None => {
-		    self.tokens.push(
+		,
+		None => 
 			Token {
 			    tokenType: TokenType::EOF,
 			    lexeme: None,
 			    literal: "EOF".to_string()
 			}
-		    );
-		    break;
-		},
-		_ => {}
+		,
+		_ => continue
+	    };
+
+	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
+	    self.tokens.push(tok);
+	    println!("{}", self.tokens.last().unwrap());
+	    if is_eof {
+		break;
 	    }
-	    println!("{}", self.tokens[self.current - 1]);
 	}
     }
 }
