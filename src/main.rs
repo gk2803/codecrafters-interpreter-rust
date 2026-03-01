@@ -33,7 +33,9 @@ fn main() {
             if !file_contents.is_empty() {
 		lexer.tokenize();
 		
-            }
+            } else {
+		println!("EOF  null");
+	    }
         }
         _ => {
             eprintln!("Unknown command: {}", command);
