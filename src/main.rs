@@ -26,7 +26,7 @@ fn main() {
             });
 
 	    let mut lexer = Lexer::new(&file_contents);
-	    lexer.tokenize();
+
 	    
 
 
@@ -182,7 +182,6 @@ impl<'a> Lexer<'a> {
 
 
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
-	    println!("tok: {:?}, is_eof: {:?}", tok, is_eof);
 	    self.tokens.push(tok);
 	    println!("{}", self.tokens.last().unwrap());
 	    if is_eof {
