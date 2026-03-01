@@ -62,30 +62,34 @@ enum TokenType {
 
 impl Display for TokenType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-	match self {
-	    TokenType::EOF => write!(f, ""),
-	    TokenType::LeftParen => write!(f, "LEFT_PAREN"),
-	    TokenType::RightParen => write!(f, "RIGHT_PAREN"),
-	    TokenType::LeftBrace => write!(f, "LEFT_BRACE"),
-	    TokenType::RightBrace => write!(f, "RIGHT_BRACE"),
-	    TokenType::Comma => write!(f, "COMMA"),
-	    TokenType::Dot => write!(f, "DOT"),
-	    TokenType::Star => write!(f, "STAR"),
-	    TokenType::Plus => write!(f, "PLUS"),
-	    TokenType::Minus => write!(f, "MINUS"),
-	    TokenType::Semicolon => write!(f, "SEMICOLON"),
-	    TokenType::Slash => write!(f, "SLASH"),
-	    TokenType::Bang => write!(f, "BANG"),
-	    TokenType::BangEqual => write!(f, "BANG_EQUAL"),
-	    TokenType::Greater => write!(f, "GREATER"),
-	    TokenType::GreaterEqual => write!(f, "GREATER_EQUAL"),
-	    TokenType::Less => write!(f, "LESS"),
-	    TokenType::LessEqual => write!(f, "LESS_EQUAL"),
-	    TokenType::Equal => write!(f, "EQUAL"),
-	    TokenType::EqualEqual => write!(f, "EQUAL_EQUAL"),
-	    TokenType::String(val) => write!(f, "STRING \"{}\" {}", val, val),
-	    TokenType::Number(raw, val) => write!(f, "NUMBER {} {}", raw, val),
-	}
+
+	
+	let kind = match self {
+	    TokenType::EOF => "EOF",
+	    TokenType::LeftParen => "LEFT_PAREN",
+	    TokenType::RightParen => "RIGHT_PAREN",
+	    TokenType::LeftBrace => "LEFT_BRACE",
+	    TokenType::RightBrace => "RIGHT_BRACE",
+	    TokenType::Comma => "COMMA",
+	    TokenType::Dot => "DOT",
+	    TokenType::Star => "STAR",
+	    TokenType::Plus => "PLUS",
+	    TokenType::Minus => "MINUS",
+	    TokenType::Semicolon => "SEMICOLON",
+	    TokenType::Slash => "SLASH",
+	    TokenType::Bang => "BANG",
+	    TokenType::BangEqual => "BANG_EQUAL",
+	    TokenType::Greater => "GREATER",
+	    TokenType::GreaterEqual => "GREATER_EQUAL",
+	    TokenType::Less => "LESS",
+	    TokenType::LessEqual => "LESS_EQUAL",
+	    TokenType::Equal => "EQUAL",
+	    TokenType::EqualEqual => "EQUAL_EQUAL",
+	    TokenType::String(val) => &format!("STRING \"{}\" {}", val, val),
+	    TokenType::Number(raw, val) => &format!("NUMBER {} {}", raw, val),
+	};
+
+	write!(f, "{}", kind)
     }
 }
 
@@ -100,7 +104,11 @@ pub struct Token {
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
 	let lexeme = self.lexeme.as_deref().unwrap_or("null");
-	write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
+	if self.literal.is_empty() {
+	    write!(f, "{} {}", self.tokenType, lexeme)
+	} else {
+	    write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
+	}
     }
 }
 
