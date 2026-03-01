@@ -247,7 +247,7 @@ impl<'a> Lexer<'a> {
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
 	    is_err = matches!(tok.tokenType, TokenType::Unknown(_,_));
 	    self.tokens.push(tok);
-
+	    println!("{:?}", is_err);
 	    if !is_err {
 		println!("{}", self.tokens.last().unwrap());
 	    } else {
