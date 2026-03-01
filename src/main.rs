@@ -141,7 +141,6 @@ impl<'a> Lexer<'a> {
     }
 
     fn advance(&mut self) -> Option<char> {
-	println!("current: {}, len: {}", self.current, self.source.len());
 	if self.is_at_end() {
 	    return None;
 	}
@@ -181,9 +180,9 @@ impl<'a> Lexer<'a> {
 		_ => continue
 	    };
 
-	    println!("{:?}", tok);
 
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
+	    println!("tok: {:?}, is_eof: {:?}", tok, is_eof);
 	    self.tokens.push(tok);
 	    println!("{}", self.tokens.last().unwrap());
 	    if is_eof {
