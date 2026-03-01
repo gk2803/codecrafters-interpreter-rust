@@ -93,6 +93,7 @@ impl Display for TokenType {
     }
 }
 
+#[derive(debug)]
 pub struct Token {
     tokenType: TokenType,
     lexeme: Option<String>,
@@ -178,6 +179,8 @@ impl<'a> Lexer<'a> {
 		,
 		_ => continue
 	    };
+
+	    println!("{:?}", tok);
 
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
 	    self.tokens.push(tok);
