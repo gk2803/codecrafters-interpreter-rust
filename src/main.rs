@@ -249,6 +249,20 @@ impl<'a> Lexer<'a> {
 		    }
 		}
 		,
+		Some('!') => if let Some('=') = self.peek() {
+		    self.advance();
+		    Token {
+			tokenType: TokenType::BangEqual,
+			lexeme: None,
+			literal: "!=".to_string()
+		    }
+		} else {
+		    Token {
+			tokenType: TokenType::Bang,
+			lexeme: None,
+			literal: "!".to_string()
+		    }
+		}
 		None => 
 			Token {
 			    tokenType: TokenType::EOF,
