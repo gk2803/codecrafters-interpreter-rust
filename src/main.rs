@@ -288,7 +288,6 @@ impl<'a> Lexer<'a> {
 		},
 		Some('/') => if let Some('/') = self.peek() {
 		    while self.peek() != Some('\n') && !self.is_at_end() {
-			
 			self.advance();
 		    }
 		    continue;
@@ -299,6 +298,8 @@ impl<'a> Lexer<'a> {
 			literal: "/".to_string()
 		    }
 		},
+		Some(' ') | Some('\t') | Some('\n') =>
+		    continue,
 		None => 
 			Token {
 			    tokenType: TokenType::EOF,
