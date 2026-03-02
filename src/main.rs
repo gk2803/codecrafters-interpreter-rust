@@ -235,6 +235,7 @@ impl<'a> Lexer<'a> {
 		    literal: "-".to_string()
 		},
 		Some('=') => if let Some('=') = self.peek() {
+		    self.advance();
 		    Token {
 			tokenType: TokenType::EqualEqual,
 			lexeme: None,
