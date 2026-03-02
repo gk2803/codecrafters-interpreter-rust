@@ -209,11 +209,6 @@ impl<'a> Lexer<'a> {
 		    lexeme: None,
 		    literal: "*".to_string()
 		},
-		Some('/') => Token {
-		    tokenType: TokenType::Slash,
-		    lexeme: None,
-		    literal: "/".to_string()
-		},
 		Some(',') => Token {
 		    tokenType: TokenType::Comma,
 		    lexeme: None,
@@ -289,6 +284,23 @@ impl<'a> Lexer<'a> {
 			tokenType: TokenType::Greater,
 			lexeme: None,
 			literal: ">".to_string()
+		    }
+		},
+		Some('/') => if let Some('/') = self.peek() {
+		    self.advance();
+		    while let Some(c) = self.peek() {
+			if c != '\n' {
+			    self.advance();
+			} else {
+			    break;
+			}
+		    }
+		    continue;
+		} else {
+		    Token {
+			tokenType: TokenType::Slash,
+			lexeme: None,
+			literal: "/".to_string()
 		    }
 		},
 		None => 
