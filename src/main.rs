@@ -262,7 +262,35 @@ impl<'a> Lexer<'a> {
 			lexeme: None,
 			literal: "!".to_string()
 		    }
-		}
+		},
+		Some('<') => if let Some('=') = self.peek() {
+		    self.advance();
+		    Token {
+			tokenType: TokenType::LessEqual,
+			lexeme: None,
+			literal: "<=".to_string()
+		    }
+		} else {
+		    Token {
+			tokenType: TokenType::Less,
+			lexeme: None,
+			literal: "<".to_string()
+		    }
+		},
+		Some('>') => if let Some('=') = self.peek() {
+		    self.advance();
+		    Token {
+			tokenType: TokenType::GreaterEqual,
+			lexeme: None,
+			literal: ">=".to_string()
+		    }
+		} else {
+		    Token {
+			tokenType: TokenType::Greater,
+			lexeme: None,
+			literal: ">".to_string()
+		    }
+		},
 		None => 
 			Token {
 			    tokenType: TokenType::EOF,
