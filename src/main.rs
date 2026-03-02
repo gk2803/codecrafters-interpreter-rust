@@ -287,13 +287,9 @@ impl<'a> Lexer<'a> {
 		    }
 		},
 		Some('/') => if let Some('/') = self.peek() {
-		    self.advance();
-		    while let Some(c) = self.peek() {
-			if c != '\n' {
-			    self.advance();
-			} else {
-			    break;
-			}
+		    while self.peek() != Some('\n') && !self.is_at_end() {
+			
+			self.advance();
 		    }
 		    continue;
 		} else {
