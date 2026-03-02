@@ -245,16 +245,13 @@ impl<'a> Lexer<'a> {
 
 	    
 	    if matches!(tok.tokenType, TokenType::Unknown(_, _)) {
+		eprintln!("{}", self.tokens.last().unwrap());
 		is_err = true;
+	    } else {
+		println!("{}", self.tokens.last().unwrap());
 	    }
 	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
 	    self.tokens.push(tok);
-	    if !is_err {
-		println!("{}", self.tokens.last().unwrap());
-	    } else {
-		eprintln!("{}", self.tokens.last().unwrap());
-	    }
-
 	    if is_eof {break;}
 
 	}
