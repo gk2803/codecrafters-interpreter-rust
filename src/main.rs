@@ -3,7 +3,7 @@ use std::env;
 use std::fs;
 use std::fmt::{Display, Formatter};
 use std::fmt::Error;
-
+use std::str::Chars;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -162,6 +162,13 @@ impl<'a> Lexer<'a> {
 	Some(c)
     }
 
+    fn peek(&mut self) -> Option<char> {
+	if self.is_at_end() {
+	    return None;
+	}
+	self.source[self.current..].chars().next()
+    }
+
     pub fn tokenize(&mut self) {
 
 	let mut is_err = false;
@@ -227,6 +234,20 @@ impl<'a> Lexer<'a> {
 		    lexeme: None,
 		    literal: "-".to_string()
 		},
+		Some('=') => if let Some('=') = self.peek() {
+		    Token {
+			tokenType: TokenType::EqualEqual,
+			lexeme: None,
+			literal: "==".to_string()
+		    }
+		} else {
+		    Token {
+			tokenType: TokenType::Equal,
+			lexeme: None,
+			literal: "=".to_string()
+		    }
+		}
+		,
 		None => 
 			Token {
 			    tokenType: TokenType::EOF,
