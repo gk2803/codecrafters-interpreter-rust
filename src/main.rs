@@ -284,7 +284,7 @@ impl<'a> Lexer<'a> {
 				self.add_token(Token::new(TokenType::String(dummy)));
 				break;
 			    },
-			    Some('\n') => {
+			    Some('\n') | None=> {
 				is_err = true;
 				eprintln!("[line {}] Error: Unterminated string.", self.line);
 				break;
@@ -292,13 +292,7 @@ impl<'a> Lexer<'a> {
 			    Some(a)  => {
 				dummy.push(a);
 				self.advance(); // consume character
-			    },
-			    None => {
-				is_err = true;
-				eprintln!("[line {}] Error: Unterminated string.", self.line);
-				break; // let outer loop handle the None case
 			    }
-			    
 			}
 		    }
 		}
