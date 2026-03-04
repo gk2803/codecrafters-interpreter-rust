@@ -278,20 +278,24 @@ impl<'a> Lexer<'a> {
 		    loop {
 			match self.peek() {
 			    Some('"') => {
+				self.advance(); // consume closing quote 
 				self.add_token(Token::new(TokenType::String(dummy)));
-				self.advance();
 				break;
 			    },
-			    Some('\n') | None => {
+			    Some('\n') => {
 				is_err = true;
 				eprintln!("[line {}] Error: Unterminated string", self.line);
-				self.advance();
 				break;
 			    },
 			    Some(a)  => {
 				dummy.push(a);
 				self.advance();
 			    },
+			    None => {
+				is_err = true;
+				eprintln!("[line {}] Error: Unterminated string", self.line);
+				return;
+			    }
 			    
 			}
 		    }
