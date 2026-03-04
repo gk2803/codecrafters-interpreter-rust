@@ -255,7 +255,7 @@ impl<'a> Lexer<'a> {
 		    self.advance();
 		    self.add_token(Token::new(TokenType::LessEqual));
 		} else {
-		    self.add_token(Token::new(TokenType::Minus))
+		    self.add_token(Token::new(TokenType::Less))
 		},
 		Some('>') => if let Some('=') = self.peek() {
 		    self.advance();
