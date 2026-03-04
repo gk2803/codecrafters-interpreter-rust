@@ -286,7 +286,7 @@ impl<'a> Lexer<'a> {
 			    },
 			    Some('\n') => {
 				is_err = true;
-				eprintln!("[line {}] Error: Unterminated string", self.line);
+				eprintln!("[line {}] Error: Unterminated string.", self.line);
 				break;
 			    },
 			    Some(a)  => {
@@ -295,7 +295,7 @@ impl<'a> Lexer<'a> {
 			    },
 			    None => {
 				is_err = true;
-				eprintln!("[line {}] Error: Unterminated string", self.line);
+				eprintln!("[line {}] Error: Unterminated string.", self.line);
 				break;
 			    }
 			    
