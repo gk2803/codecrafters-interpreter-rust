@@ -301,7 +301,10 @@ impl<'a> Lexer<'a> {
 		    }
 		}
 		,
-		None => self.add_token(Token::new(TokenType::EOF)),
+		None => {
+		    self.add_token(Token::new(TokenType::EOF));
+		    return;
+		},
 		Some(c) => 
 		{
 		    is_err = true;
