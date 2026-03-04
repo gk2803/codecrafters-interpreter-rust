@@ -139,7 +139,10 @@ impl Token {
 		(val.to_string(), lexeme)
 	    }
 	    ,
-	    TokenType::EOF => (String::from("null"), String::from(" ")),
+	    TokenType::EOF => {
+		(String::from("null"), String::from(" "))
+	    }
+	    ,
 	    TokenType::Bang =>  (String::from("null"), String::from("!")),
 	    TokenType::BangEqual => (String::from("null"), String::from("!=")),
 	    TokenType::Comma => (String::from("null"), String::from(",")),
@@ -303,7 +306,7 @@ impl<'a> Lexer<'a> {
 		,
 		None => {
 		    self.add_token(Token::new(TokenType::EOF));
-		    return;
+		    break;
 		},
 		Some(c) => 
 		{
