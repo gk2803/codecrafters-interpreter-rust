@@ -227,7 +227,6 @@ impl<'a> Lexer<'a> {
 	loop {
 	    match self.advance() {
 		Some('(') => self.add_token(Token::new(TokenType::LeftParen)),
-
 		Some(')') => self.add_token(Token::new(TokenType::RightParen)),
 		Some('}') => self.add_token(Token::new(TokenType::LeftBrace)),
 		Some('{') => self.add_token(Token::new(TokenType::RightBrace)),
