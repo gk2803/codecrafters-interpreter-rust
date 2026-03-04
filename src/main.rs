@@ -42,6 +42,23 @@ fn main() {
         }
     }
 }
+
+#[derive(Debug)]
+
+enum TokenError {
+    UnexpectedCharacter(char),
+    UnterminatedString
+}
+
+impl Display for TokenError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+	match self {
+	    Self::UnexpectedCharacter(c) => write!(f, "Unexpected character: {c}"),
+	    Self::UnterminatedString => write!(f, "Unterminated string.")
+	}
+    }
+}
+
 #[derive(Debug)]
 enum TokenType {
     // Single-character tokens.
@@ -59,10 +76,9 @@ enum TokenType {
 
     // Keywords.
     EOF,
-
-    // Unknown
-    Unknown(usize, char)
 }
+
+
 
 impl Display for TokenType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
@@ -88,19 +104,21 @@ impl Display for TokenType {
 	    TokenType::LessEqual => "LESS_EQUAL",
 	    TokenType::Equal => "EQUAL",
 	    TokenType::EqualEqual => "EQUAL_EQUAL",
-	    TokenType::String(val) => &format!("STRING \"{}\" {}", val, val),
-	    TokenType::Number(raw, val) => &format!("NUMBER {} {}", raw, val),
-	    TokenType::Unknown(line, value) => &format!("[line {}] Error: Unexpected character: {}", line, value)
+	    TokenType::String(_) => "STRING",
+	    TokenType::Number(_, _) => "NUMBER",
 	};
 
 	write!(f, "{}", kind)
     }
 }
 
+
+// <TokenType> <lexeme> <literal>
+// STRING "lox" lox
 #[derive(Debug)]
 pub struct Token {
     tokenType: TokenType,
-    lexeme: Option<String>,
+    lexeme: String,
     literal: String,
 }
 
@@ -108,18 +126,47 @@ pub struct Token {
 
 impl Display for Token {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-	let lexeme = self.lexeme.as_deref().unwrap_or("null");
+	write!(f, "{} {} {}", self.tokenType, self.lexeme, self.literal)
+    }
 
-	match self.tokenType {
-	    TokenType::EOF => write!(f, "{}  {}", self.tokenType, lexeme),
-	    TokenType::Unknown(x, y) => write!(f, "{}", self.tokenType),
-	    _ => write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
+}
+
+impl Token {
+    fn new (token_type: TokenType) -> Self {
+
+	let (literal, lexeme) =  match &token_type {
+	    TokenType::String(val)  | TokenType::Number(val, _) =>{
+		let lexeme = format!("\"{}\"", &val);
+		(val.to_string(), lexeme)
+	    }
+	    ,
+	    TokenType::EOF => (String::from("null"), String::from(" ")),
+	    TokenType::Bang =>  (String::from("null"), String::from("!")),
+	    TokenType::BangEqual => (String::from("null"), String::from("!=")),
+	    TokenType::Comma => (String::from("null"), String::from(",")),
+	    TokenType::Dot => (String::from("null"), String::from(".")),
+	    TokenType::Equal => (String::from("null"), String::from("=")),
+	    TokenType::EqualEqual => (String::from("null"), String::from("==")),
+	    TokenType::Greater => (String::from("null"), String::from(">")),
+	    TokenType::GreaterEqual => (String::from("null"), String::from(">=")),
+	    TokenType::Less => (String::from("null"), String::from("<")),
+	    TokenType::LessEqual => (String::from("null"), String::from(">")),
+	    TokenType::LeftBrace => (String::from("null"), String::from("}")),
+	    TokenType::RightBrace => (String::from("null"), String::from("{")),
+	    TokenType::LeftParen => (String::from("null"), String::from("(")),
+	    TokenType::RightParen => (String::from("null"), String::from(")")),
+	    TokenType::Minus => (String::from("null"), String::from("-")),
+	    TokenType::Plus => (String::from("null"), String::from("+")),
+	    TokenType::Star => (String::from("null"), String::from("*")),
+	    TokenType::Semicolon => (String::from("null"), String::from(";")),
+	    TokenType::Slash => (String::from("null"), String::from("/"))
+	};
+	
+	Self {
+	    tokenType: token_type,
+	    lexeme: lexeme,
+	    literal: literal
 	}
-	// if self.literal.is_empty() {
-	//     write!(f, "{}  {}", self.tokenType, lexeme)
-	// } else {
-	//     write!(f, "{} {} {}", self.tokenType, self.literal, lexeme)
-	// }
     }
 }
 
@@ -169,122 +216,51 @@ impl<'a> Lexer<'a> {
 	self.source[self.current..].chars().next()
     }
 
+    pub fn add_token(&mut self, token: Token) {
+	self.tokens.push(token);
+    }
+
     pub fn tokenize(&mut self) {
 
 	let mut is_err = false;
 
 	loop {
-	    let tok = match self.advance() {
-		Some('(') => 
-		    Token {
-			tokenType: TokenType::LeftParen,
-			lexeme: None,
-			literal: "(".to_string()
-		    }
-		,
-		Some(')') => 
-		    Token {
-			tokenType: TokenType::RightParen,
-			lexeme: None,
-			literal: ")".to_string()
-		    }
-		,
-		Some('}') => Token {
-		    tokenType: TokenType::RightBrace,
-		    lexeme: None,
-		    literal: "}".to_string()
-		} ,
-		Some('{') => Token {
-		    tokenType: TokenType::LeftBrace,
-		    lexeme: None,
-		    literal: "{".to_string()
-		},
-		Some('+') => Token {
-		    tokenType: TokenType::Plus,
-		    lexeme: None,
-		    literal: "+".to_string()
-		},
-		Some('*') => Token {
-		    tokenType: TokenType::Star,
-		    lexeme: None,
-		    literal: "*".to_string()
-		},
-		Some(',') => Token {
-		    tokenType: TokenType::Comma,
-		    lexeme: None,
-		    literal: ",".to_string()
-		},
-		Some('.') => Token {
-		    tokenType: TokenType::Dot,
-		    lexeme: None,
-		    literal: ".".to_string()
-		},
-		Some(';') => Token {
-		    tokenType: TokenType::Semicolon,
-		    lexeme: None,
-		    literal: ";".to_string()
-		},
-		Some('-') => Token {
-		    tokenType: TokenType::Minus,
-		    lexeme: None,
-		    literal: "-".to_string()
-		},
+	    match self.advance() {
+		Some('(') => self.add_token(Token::new(TokenType::LeftParen)),
+
+		Some(')') => self.add_token(Token::new(TokenType::RightParen)),
+		Some('}') => self.add_token(Token::new(TokenType::LeftBrace)),
+		Some('{') => self.add_token(Token::new(TokenType::RightBrace)),
+		Some('+') => self.add_token(Token::new(TokenType::Plus)),
+		Some('*') => self.add_token(Token::new(TokenType::Star)),
+		Some(',') => self.add_token(Token::new(TokenType::Comma)),
+		Some('.') => self.add_token(Token::new(TokenType::Dot)),
+		Some(';') => self.add_token(Token::new(TokenType::Semicolon)),
+		Some('-') => self.add_token(Token::new(TokenType::Minus)),
 		Some('=') => if let Some('=') = self.peek() {
 		    self.advance();
-		    Token {
-			tokenType: TokenType::EqualEqual,
-			lexeme: None,
-			literal: "==".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::EqualEqual));
 		} else {
-		    Token {
-			tokenType: TokenType::Equal,
-			lexeme: None,
-			literal: "=".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::Equal));
 		}
 		,
 		Some('!') => if let Some('=') = self.peek() {
 		    self.advance();
-		    Token {
-			tokenType: TokenType::BangEqual,
-			lexeme: None,
-			literal: "!=".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::BangEqual));
 		} else {
-		    Token {
-			tokenType: TokenType::Bang,
-			lexeme: None,
-			literal: "!".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::Bang));
 		},
 		Some('<') => if let Some('=') = self.peek() {
 		    self.advance();
-		    Token {
-			tokenType: TokenType::LessEqual,
-			lexeme: None,
-			literal: "<=".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::LessEqual));
 		} else {
-		    Token {
-			tokenType: TokenType::Less,
-			lexeme: None,
-			literal: "<".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::Minus))
 		},
 		Some('>') => if let Some('=') = self.peek() {
 		    self.advance();
-		    Token {
-			tokenType: TokenType::GreaterEqual,
-			lexeme: None,
-			literal: ">=".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::GreaterEqual));
 		} else {
-		    Token {
-			tokenType: TokenType::Greater,
-			lexeme: None,
-			literal: ">".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::Greater));
 		},
 		Some('/') => if let Some('/') = self.peek() {
 		    while self.peek() != Some('\n') && !self.is_at_end() {
@@ -292,41 +268,44 @@ impl<'a> Lexer<'a> {
 		    }
 		    continue;
 		} else {
-		    Token {
-			tokenType: TokenType::Slash,
-			lexeme: None,
-			literal: "/".to_string()
-		    }
+		    self.add_token(Token::new(TokenType::Slash));
 		},
 		Some(' ') | Some('\t') | Some('\n') =>
 		    continue,
-		None => 
-			Token {
-			    tokenType: TokenType::EOF,
-			    lexeme: None,
-			    literal: "".to_string()
-			}
-		,
-		Some(c) => 
-		    Token {
-			tokenType: TokenType::Unknown(self.line, c),
-			lexeme: None,
-			literal: "".to_string()
-		    }
-		   ,
-	    };
 
-	    let is_eof = matches!(tok.tokenType, TokenType::EOF);
-	    let is_unknown = matches!(tok.tokenType, TokenType::Unknown(_, _));
-	    self.tokens.push(tok);
-	    
-	    if is_unknown {
-		is_err = true;
-		eprintln!("{}", self.tokens.last().unwrap());
-	    } else {
-		println!("{}", self.tokens.last().unwrap());
+		Some('"') =>
+		{
+		    let mut dummy: String = String::from("");
+		    let c = self.peek();
+		    loop {
+			match c {
+			    Some('"') => {
+				self.add_token(Token::new(TokenType::String(dummy)));
+				self.advance();
+				break;
+			    },
+			    Some('\n') | None => {
+				is_err = true;
+				eprintln!("[line {}] Error: Unterminated string", self.line);
+				break;
+			    },
+			    Some(a)  => {
+				dummy.push(a);
+				self.advance();
+			    },
+			    
+			}
+		    }
+		}
+		,
+		None => self.add_token(Token::new(TokenType::EOF)),
+		Some(c) => 
+		{
+		    is_err = true;
+		    eprintln!("[line {}] Error: Unexpected character: {}", self.line, c);
+		    break;
+		}
 	    }
-	    if is_eof {break;}
 
 	}
 
