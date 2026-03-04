@@ -305,6 +305,7 @@ impl<'a> Lexer<'a> {
 		,
 		None => {
 		    self.add_token(Token::new(TokenType::EOF));
+		    println!("last one ");
 		    break;
 		},
 		Some(c) => 
