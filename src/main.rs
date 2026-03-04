@@ -276,8 +276,7 @@ impl<'a> Lexer<'a> {
 		{
 		    let mut dummy: String = String::from("");
 		    loop {
-		    let c = self.peek();
-			match c {
+			match self.peek() {
 			    Some('"') => {
 				self.add_token(Token::new(TokenType::String(dummy)));
 				self.advance();
