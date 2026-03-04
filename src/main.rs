@@ -287,7 +287,6 @@ impl<'a> Lexer<'a> {
 			    Some('\n') => {
 				is_err = true;
 				eprintln!("[line {}] Error: Unterminated string.", self.line);
-				self.advance();
 				break;
 			    },
 			    Some(a)  => {
