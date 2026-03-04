@@ -295,6 +295,7 @@ impl<'a> Lexer<'a> {
 			    },
 			    None => {
 				is_err = true;
+				println!("entered here");
 				eprintln!("[line {}] Error: Unterminated string", self.line);
 				break;
 			    }
@@ -305,7 +306,6 @@ impl<'a> Lexer<'a> {
 		,
 		None => {
 		    self.add_token(Token::new(TokenType::EOF));
-		    println!("last one ");
 		    break;
 		},
 		Some(c) => 
