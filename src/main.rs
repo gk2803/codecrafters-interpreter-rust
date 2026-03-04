@@ -280,6 +280,7 @@ impl<'a> Lexer<'a> {
 			    Some('"') => {
 				self.advance(); // consume closing quote 
 				self.add_token(Token::new(TokenType::String(dummy)));
+				println!("{}", self.tokens.last().unwrap());
 				break;
 			    },
 			    Some('\n') => {
