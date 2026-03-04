@@ -291,12 +291,12 @@ impl<'a> Lexer<'a> {
 			    },
 			    Some(a)  => {
 				dummy.push(a);
-				self.advance();
+				self.advance(); // consume character
 			    },
 			    None => {
 				is_err = true;
 				eprintln!("[line {}] Error: Unterminated string.", self.line);
-				break;
+				break; // let outer loop handle the None case
 			    }
 			    
 			}
