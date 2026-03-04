@@ -140,7 +140,7 @@ impl Token {
 	    }
 	    ,
 	    TokenType::EOF => {
-		(String::from("null"), String::from(" "))
+		(String::from("null"), String::from(""))
 	    }
 	    ,
 	    TokenType::Bang =>  (String::from("null"), String::from("!")),
