@@ -276,26 +276,26 @@ impl<'a> Lexer<'a> {
 		{
 		    let mut dummy: String = String::from("");
 		    let c = self.peek();
-		    loop {
-			match c {
-			    Some('"') => {
-				self.add_token(Token::new(TokenType::String(dummy)));
-				self.advance();
-				break;
-			    },
-			    Some('\n') | None => {
-				is_err = true;
-				eprintln!("[line {}] Error: Unterminated string", self.line);
-				self.advance();
-				break;
-			    },
-			    Some(a)  => {
-				dummy.push(a);
-				self.advance();
-			    },
+		    // loop {
+		    // 	match c {
+		    // 	    Some('"') => {
+		    // 		self.add_token(Token::new(TokenType::String(dummy)));
+		    // 		self.advance();
+		    // 		break;
+		    // 	    },
+		    // 	    Some('\n') | None => {
+		    // 		is_err = true;
+		    // 		eprintln!("[line {}] Error: Unterminated string", self.line);
+		    // 		self.advance();
+		    // 		break;
+		    // 	    },
+		    // 	    Some(a)  => {
+		    // 		dummy.push(a);
+		    // 		self.advance();
+		    // 	    },
 			    
-			}
-		    }
+		    // 	}
+		    // }
 		}
 		,
 		None => self.add_token(Token::new(TokenType::EOF)),
