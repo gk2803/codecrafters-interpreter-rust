@@ -282,7 +282,6 @@ impl<'a> Lexer<'a> {
 			    Some('"') => {
 				self.advance(); // consume closing quote 
 				self.add_token(Token::new(TokenType::String(dummy)));
-				
 				break;
 			    },
 			    Some('\n') => {
@@ -297,7 +296,7 @@ impl<'a> Lexer<'a> {
 			    None => {
 				is_err = true;
 				eprintln!("[line {}] Error: Unterminated string", self.line);
-				return;
+				break;
 			    }
 			    
 			}
