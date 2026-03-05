@@ -46,6 +46,7 @@ impl<'a> Lexer<'a> {
     }
 
     pub fn add_token(&mut self, token: Token) {
+	println!("{}", token);
 	self.tokens.push(token);
     }
 
@@ -57,8 +58,8 @@ impl<'a> Lexer<'a> {
 	    match self.advance() {
 		Some('(') => self.add_token(Token::new(TokenType::LeftParen)),
 		Some(')') => self.add_token(Token::new(TokenType::RightParen)),
-		Some('}') => self.add_token(Token::new(TokenType::LeftBrace)),
-		Some('{') => self.add_token(Token::new(TokenType::RightBrace)),
+		Some('{') => self.add_token(Token::new(TokenType::LeftBrace)),
+		Some('}') => self.add_token(Token::new(TokenType::RightBrace)),
 		Some('+') => self.add_token(Token::new(TokenType::Plus)),
 		Some('*') => self.add_token(Token::new(TokenType::Star)),
 		Some(',') => self.add_token(Token::new(TokenType::Comma)),
@@ -126,18 +127,16 @@ impl<'a> Lexer<'a> {
 		,
 		None => {
 		    self.add_token(Token::new(TokenType::EOF));
-		    println!("{}", self.tokens.last().unwrap());
 		    break;
 		},
 		Some(c) => 
 		{
 		    is_err = true;
 		    eprintln!("[line {}] Error: Unexpected character: {}", self.line, c);
-		    break;
+		    
 		}
 	    }
-	    println!("{}", self.tokens.last().unwrap());
-
+	    
 	}
 
 	if is_err {
