@@ -20,7 +20,7 @@ impl Token {
     pub fn new (token_type: TokenType) -> Self {
 
 	let (literal, lexeme) =  match &token_type {
-	    TokenType::String(val)  | TokenType::Number(val, _) =>{
+	    TokenType::String(val)  => {
 		let lexeme = format!("\"{}\"", &val);
 		(val.to_string(), lexeme)
 	    }
@@ -47,7 +47,10 @@ impl Token {
 	    TokenType::Plus => (String::from("null"), String::from("+")),
 	    TokenType::Star => (String::from("null"), String::from("*")),
 	    TokenType::Semicolon => (String::from("null"), String::from(";")),
-	    TokenType::Slash => (String::from("null"), String::from("/"))
+	    TokenType::Slash => (String::from("null"), String::from("/")),
+	    TokenType::Number(num, parsed) => {
+		(format!("{:?}", &parsed), format!("{}", num))
+	    }
 	};
 	
 	Self {

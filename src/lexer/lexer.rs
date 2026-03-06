@@ -50,6 +50,22 @@ impl<'a> Lexer<'a> {
 	self.tokens.push(token);
     }
 
+    pub fn consume_while<F: Fn(char) -> bool> (
+	&mut self,
+	until: F,
+	buffer: &mut String
+    ) {
+	while let Some(c) = self.peek() {
+	    if !until(c) {
+		break;
+	    }
+	    buffer.push(c);
+	    self.advance();
+	}
+    }
+
+
+
     pub fn tokenize(&mut self) {
 
 	let mut is_err = false;
@@ -102,32 +118,25 @@ impl<'a> Lexer<'a> {
 		Some(' ') | Some('\t') | Some('\n') =>
 		    continue,
 
-		Some('"') =>
+		Some(c @ '"') =>
 		{
-		    let mut dummy: String = String::from("");
-		    loop {
-			match self.peek() {
-			    Some('"') => {
-				self.advance(); // consume closing quote 
-				self.add_token(Token::new(TokenType::String(dummy)));
-				break;
-			    },
-			    Some('\n') | None=> {
-				is_err = true;
-				eprintln!("[line {}] Error: Unterminated string.", self.line);
-				break;
-			    },
-			    Some(a)  => {
-				dummy.push(a);
-				self.advance(); // consume character
-			    }
-			}
+		    let mut val = String::new();
+		    self.consume_while(|c| c != '"', &mut val);
+		    if Some('"') != self.peek() {
+			is_err = true;
+			eprintln!("[line {}] Error: Unterminated string.", self.line)
+		    } else {
+			self.advance();
+			self.add_token(Token::new(TokenType::String(val)));
 		    }
-		}
-		,
-		None => {
-		    self.add_token(Token::new(TokenType::EOF));
-		    break;
+		    
+		},
+		
+		Some(c) if c.is_numeric() => { 
+		    let mut num = c.to_string();
+		    self.consume_while(|c| c.is_numeric() || c == '.', &mut num);
+		    let parsed: f64 = num.parse().unwrap();
+		    self.add_token(Token::new(TokenType::Number(num, parsed)));
 		},
 		Some(c) => 
 		{
@@ -135,6 +144,11 @@ impl<'a> Lexer<'a> {
 		    eprintln!("[line {}] Error: Unexpected character: {}", self.line, c);
 		    
 		}
+		None => {
+		    self.add_token(Token::new(TokenType::EOF));
+		    break;
+		},
+
 	    }
 	    
 	}
