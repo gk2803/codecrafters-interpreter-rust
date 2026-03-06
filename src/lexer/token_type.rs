@@ -1,53 +1,39 @@
 use std::fmt::{Formatter, Display, Error};
 
+#[derive(Debug)]
 pub enum TokenType {
     // Single-character tokens.
-    LeftParen, RightParen, LeftBrace, RightBrace,
-    Comma, Dot, Minus, Plus, Semicolon, Slash, Star,
+    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
+    COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
 
     // One or two character tokens.
-    Bang, BangEqual,
-    Equal, EqualEqual,
-    Greater, GreaterEqual,
-    Less, LessEqual,
+    BANG, BANG_EQUAL,
+    EQUAL, EQUAL_EQUAL,
+    GREATER, GREATER_EQUAL,
+    LESS, LESS_EQUAL,
 
     // Literals.
-    String(String), Number(String, f64),
+    STRING(String), NUMBER(String, f64),
 
     // Keywords.
     EOF,
+
+    // Identifier,
+    IDENTIFIER(String)
 }
+
+
 
 
 
 impl Display for TokenType {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+	match self {
+	    TokenType::STRING(_) => write!(f, "STRING"),
+	    TokenType::NUMBER(_,_) => write!(f, "NUMBER"),
+	    TokenType::IDENTIFIER(_) => write!(f, "IDENTIFIER"),
+	    _ => write!(f, "{:?}", self)
+	}
 	
-	let kind = match self {
-	    TokenType::EOF => "EOF",
-	    TokenType::LeftParen => "LEFT_PAREN",
-	    TokenType::RightParen => "RIGHT_PAREN",
-	    TokenType::LeftBrace => "LEFT_BRACE",
-	    TokenType::RightBrace => "RIGHT_BRACE",
-	    TokenType::Comma => "COMMA",
-	    TokenType::Dot => "DOT",
-	    TokenType::Star => "STAR",
-	    TokenType::Plus => "PLUS",
-	    TokenType::Minus => "MINUS",
-	    TokenType::Semicolon => "SEMICOLON",
-	    TokenType::Slash => "SLASH",
-	    TokenType::Bang => "BANG",
-	    TokenType::BangEqual => "BANG_EQUAL",
-	    TokenType::Greater => "GREATER",
-	    TokenType::GreaterEqual => "GREATER_EQUAL",
-	    TokenType::Less => "LESS",
-	    TokenType::LessEqual => "LESS_EQUAL",
-	    TokenType::Equal => "EQUAL",
-	    TokenType::EqualEqual => "EQUAL_EQUAL",
-	    TokenType::String(_) => "STRING",
-	    TokenType::Number(_, _) => "NUMBER",
-	};
-
-	write!(f, "{}", kind)
     }
 }

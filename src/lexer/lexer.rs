@@ -72,40 +72,40 @@ impl<'a> Lexer<'a> {
 
 	loop {
 	    match self.advance() {
-		Some('(') => self.add_token(Token::new(TokenType::LeftParen)),
-		Some(')') => self.add_token(Token::new(TokenType::RightParen)),
-		Some('{') => self.add_token(Token::new(TokenType::LeftBrace)),
-		Some('}') => self.add_token(Token::new(TokenType::RightBrace)),
-		Some('+') => self.add_token(Token::new(TokenType::Plus)),
-		Some('*') => self.add_token(Token::new(TokenType::Star)),
-		Some(',') => self.add_token(Token::new(TokenType::Comma)),
-		Some('.') => self.add_token(Token::new(TokenType::Dot)),
-		Some(';') => self.add_token(Token::new(TokenType::Semicolon)),
-		Some('-') => self.add_token(Token::new(TokenType::Minus)),
+		Some('(') => self.add_token(Token::new(TokenType::LEFT_PAREN)),
+		Some(')') => self.add_token(Token::new(TokenType::RIGHT_PAREN)),
+		Some('{') => self.add_token(Token::new(TokenType::LEFT_BRACE)),
+		Some('}') => self.add_token(Token::new(TokenType::RIGHT_BRACE)),
+		Some('+') => self.add_token(Token::new(TokenType::PLUS)),
+		Some('*') => self.add_token(Token::new(TokenType::STAR)),
+		Some(',') => self.add_token(Token::new(TokenType::COMMA)),
+		Some('.') => self.add_token(Token::new(TokenType::DOT)),
+		Some(';') => self.add_token(Token::new(TokenType::SEMICOLON)),
+		Some('-') => self.add_token(Token::new(TokenType::MINUS)),
 		Some('=') => if let Some('=') = self.peek() {
 		    self.advance();
-		    self.add_token(Token::new(TokenType::EqualEqual));
+		    self.add_token(Token::new(TokenType::EQUAL_EQUAL));
 		} else {
-		    self.add_token(Token::new(TokenType::Equal));
+		    self.add_token(Token::new(TokenType::EQUAL));
 		}
 		,
 		Some('!') => if let Some('=') = self.peek() {
 		    self.advance();
-		    self.add_token(Token::new(TokenType::BangEqual));
+		    self.add_token(Token::new(TokenType::BANG_EQUAL));
 		} else {
-		    self.add_token(Token::new(TokenType::Bang));
+		    self.add_token(Token::new(TokenType::BANG));
 		},
 		Some('<') => if let Some('=') = self.peek() {
 		    self.advance();
-		    self.add_token(Token::new(TokenType::LessEqual));
+		    self.add_token(Token::new(TokenType::LESS_EQUAL));
 		} else {
-		    self.add_token(Token::new(TokenType::Less))
+		    self.add_token(Token::new(TokenType::LESS))
 		},
 		Some('>') => if let Some('=') = self.peek() {
 		    self.advance();
-		    self.add_token(Token::new(TokenType::GreaterEqual));
+		    self.add_token(Token::new(TokenType::GREATER_EQUAL));
 		} else {
-		    self.add_token(Token::new(TokenType::Greater));
+		    self.add_token(Token::new(TokenType::GREATER));
 		},
 		Some('/') => if let Some('/') = self.peek() {
 		    while self.peek() != Some('\n') && !self.is_at_end() {
@@ -113,7 +113,7 @@ impl<'a> Lexer<'a> {
 		    }
 		    continue;
 		} else {
-		    self.add_token(Token::new(TokenType::Slash));
+		    self.add_token(Token::new(TokenType::SLASH));
 		},
 		Some(' ') | Some('\t') | Some('\n') =>
 		    continue,
@@ -127,7 +127,7 @@ impl<'a> Lexer<'a> {
 			eprintln!("[line {}] Error: Unterminated string.", self.line)
 		    } else {
 			self.advance();
-			self.add_token(Token::new(TokenType::String(val)));
+			self.add_token(Token::new(TokenType::STRING(val)));
 		    }
 		    
 		},
@@ -136,14 +136,20 @@ impl<'a> Lexer<'a> {
 		    let mut num = c.to_string();
 		    self.consume_while(|c| c.is_numeric() || c == '.', &mut num);
 		    let parsed: f64 = num.parse().unwrap();
-		    self.add_token(Token::new(TokenType::Number(num, parsed)));
+		    self.add_token(Token::new(TokenType::NUMBER(num, parsed)));
 		},
+		Some(c) if c.is_alphabetic() ||c == '_' => {
+		    let mut val = c.to_string();
+		    self.consume_while(|c| c.is_alphanumeric(), &mut val);
+		    self.add_token(Token::new(TokenType::IDENTIFIER(val)));
+		}
+		,
 		Some(c) => 
 		{
 		    is_err = true;
 		    eprintln!("[line {}] Error: Unexpected character: {}", self.line, c);
 		    
-		}
+		},
 		None => {
 		    self.add_token(Token::new(TokenType::EOF));
 		    break;

@@ -20,7 +20,7 @@ impl Token {
     pub fn new (token_type: TokenType) -> Self {
 
 	let (literal, lexeme) =  match &token_type {
-	    TokenType::String(val)  => {
+	    TokenType::STRING(val)  => {
 		let lexeme = format!("\"{}\"", &val);
 		(val.to_string(), lexeme)
 	    }
@@ -29,28 +29,27 @@ impl Token {
 		(String::from("null"), String::from(""))
 	    }
 	    ,
-	    TokenType::Bang =>  (String::from("null"), String::from("!")),
-	    TokenType::BangEqual => (String::from("null"), String::from("!=")),
-	    TokenType::Comma => (String::from("null"), String::from(",")),
-	    TokenType::Dot => (String::from("null"), String::from(".")),
-	    TokenType::Equal => (String::from("null"), String::from("=")),
-	    TokenType::EqualEqual => (String::from("null"), String::from("==")),
-	    TokenType::Greater => (String::from("null"), String::from(">")),
-	    TokenType::GreaterEqual => (String::from("null"), String::from(">=")),
-	    TokenType::Less => (String::from("null"), String::from("<")),
-	    TokenType::LessEqual => (String::from("null"), String::from("<=")),
-	    TokenType::LeftBrace => (String::from("null"), String::from("{")),
-	    TokenType::RightBrace => (String::from("null"), String::from("}")),
-	    TokenType::LeftParen => (String::from("null"), String::from("(")),
-	    TokenType::RightParen => (String::from("null"), String::from(")")),
-	    TokenType::Minus => (String::from("null"), String::from("-")),
-	    TokenType::Plus => (String::from("null"), String::from("+")),
-	    TokenType::Star => (String::from("null"), String::from("*")),
-	    TokenType::Semicolon => (String::from("null"), String::from(";")),
-	    TokenType::Slash => (String::from("null"), String::from("/")),
-	    TokenType::Number(num, parsed) => {
-		(format!("{:?}", &parsed), format!("{}", num))
-	    }
+	    TokenType::BANG =>  (String::from("null"), String::from("!")),
+	    TokenType::BANG_EQUAL => (String::from("null"), String::from("!=")),
+	    TokenType::COMMA => (String::from("null"), String::from(",")),
+	    TokenType::DOT => (String::from("null"), String::from(".")),
+	    TokenType::EQUAL => (String::from("null"), String::from("=")),
+	    TokenType::EQUAL_EQUAL => (String::from("null"), String::from("==")),
+	    TokenType::GREATER => (String::from("null"), String::from(">")),
+	    TokenType::GREATER_EQUAL => (String::from("null"), String::from(">=")),
+	    TokenType::LESS => (String::from("null"), String::from("<")),
+	    TokenType::LESS_EQUAL => (String::from("null"), String::from("<=")),
+	    TokenType::LEFT_BRACE => (String::from("null"), String::from("{")),
+	    TokenType::RIGHT_BRACE => (String::from("null"), String::from("}")),
+	    TokenType::LEFT_PAREN => (String::from("null"), String::from("(")),
+	    TokenType::RIGHT_PAREN => (String::from("null"), String::from(")")),
+	    TokenType::MINUS => (String::from("null"), String::from("-")),
+	    TokenType::PLUS => (String::from("null"), String::from("+")),
+	    TokenType::STAR => (String::from("null"), String::from("*")),
+	    TokenType::SEMICOLON => (String::from("null"), String::from(";")),
+	    TokenType::SLASH => (String::from("null"), String::from("/")),
+	    TokenType::NUMBER(num, parsed) => (format!("{:?}", &parsed), format!("{}", num)),
+	    TokenType::IDENTIFIER(val) => (String::from("null"), val.to_string())
 	};
 	
 	Self {
