@@ -49,9 +49,10 @@ impl Token {
 	    TokenType::SEMICOLON => (String::from("null"), String::from(";")),
 	    TokenType::SLASH => (String::from("null"), String::from("/")),
 	    TokenType::NUMBER(num, parsed) => (format!("{:?}", &parsed), format!("{}", num)),
-	    TokenType::IDENTIFIER(val) => (String::from("null"), val.to_string())
+	    TokenType::IDENTIFIER(val) => (String::from("null"), val.to_string()),
+	    TokenType::Reserved(reserved_word) => (String::from("null"), reserved_word.to_string())
 	};
-	
+
 	Self {
 	    token_type: token_type,
 	    lexeme: lexeme,

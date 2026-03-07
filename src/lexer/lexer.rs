@@ -1,5 +1,6 @@
 use super::token::Token;
 use super::token_type::TokenType;
+use super::token_type::reserved_word_from_string;
 
 pub struct Lexer<'a> {
     source: &'a String,
@@ -140,8 +141,13 @@ impl<'a> Lexer<'a> {
 		},
 		Some(c) if c.is_alphabetic() ||c == '_' => {
 		    let mut val = c.to_string();
-		    self.consume_while(|c| c.is_alphanumeric(), &mut val);
-		    self.add_token(Token::new(TokenType::IDENTIFIER(val)));
+		    self.consume_while(|c| c.is_alphanumeric() || c == '_', &mut val);
+
+		    if let Some(value) = reserved_word_from_string(&val) {
+			self.add_token(Token::new(TokenType::Reserved(value)))
+		    } else {
+			self.add_token(Token::new(TokenType::IDENTIFIER(val)))
+		    }
 		}
 		,
 		Some(c) => 
